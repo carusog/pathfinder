@@ -1,5 +1,6 @@
 <template>
   <div class="maze">
+    <h1>Store: {{this.$store.state.level}}</h1>
     <div class="maze--board">
       <div class="tile-row"
         v-for="(row, rowIndex) in tilesNumber"
@@ -7,13 +8,15 @@
         <tile v-for="(tile, tileIndex) in tilesNumber"
           :key="tile"
           :tileIndex="setIndex(rowIndex, tileIndex)"
-          :tileStyles="tileStyles"></tile>
+          :tileStyles="tileStyles"
+          :isWinning="setWinning"></tile>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Store from '../main.js'
 import Tile from './Tile'
 
 export default {
@@ -40,6 +43,11 @@ export default {
     setIndex (rowIndex, tileIndex) {
       return rowIndex.toString() + tileIndex.toString()
     }
+  },
+  data () {
+    return {
+      store: Store
+    }
   }
 }
 </script>
@@ -53,5 +61,7 @@ h2 {
   height: 500px;
   background-color: #ccc;
   margin: auto;
+  max-width: 90vw;
+  max-height: auto;
 }
 </style>

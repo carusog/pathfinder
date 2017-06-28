@@ -6,8 +6,11 @@
       <h2>Level {{level}} ({{tiles}}&times;{{tiles}})</h2>
     </header>
 
-    <button @click="newGame" class="btn" :class="{'btn-hidden': !isNewGame}">Start a new game <span v-if="showTimer">{{time}}</span></button>
-
+    <button @click="newGame"
+      class="btn"
+      :class="{'btn-hidden': !isNewGame}">
+        Start a new game <span v-if="showTimer">{{time}}</span>
+    </button>
 
     <maze :tilesNumber="tiles"></maze>
 
@@ -17,20 +20,19 @@
 <script>
 import Maze from './components/Maze'
 
-var store = {
-  tiles: 4,
-  level: 1
-}
-
 export default {
   name: 'app',
   components: {
     Maze
   },
+  computed: {
+    level () {
+      return this.$store.state.level
+    }
+  },
   data () {
     return {
-      level: store.level,
-      tiles: store.tiles,
+      tiles: this.$store.state.tiles,
       time: 5,
       isNewGame: true,
       showTimer: false
@@ -42,7 +44,7 @@ export default {
       var timer = null
 
       timer = setInterval(function () {
-        if (vm.time === 1) {
+        if (vm.time === 0) {
           vm.isNewGame = false
           return clearInterval(timer)
         }
