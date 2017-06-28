@@ -32,7 +32,7 @@ export default {
   },
   data () {
     return {
-      tiles: this.$store.state.tiles,
+      tiles: this.$store.state.tilesNumber,
       time: 5,
       isNewGame: true,
       showTimer: false

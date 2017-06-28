@@ -1,7 +1,7 @@
 <template>
   <div class="tile" :style="tileStyles">
     <div class="tile-container">
-      {{ tileIndex }}
+      {{tileCoords}}
     </div>
   </div>
 </template>
@@ -9,9 +9,32 @@
 <script>
 export default {
   props: [
-    'tileIndex',
+    'tileCoords',
     'tileStyles'
-  ]
+  ],
+  data () {
+    return {
+      directions: []
+    }
+  },
+  created () {
+    // if the first column, the path can move only to the right or to the bottom
+    if (this.tileCoords[0] === 1) {
+      this.directions.push('R', 'B')
+    } else if (this.tileCoords[0] === this.$store.state.tilesNumber) {
+      // if the last column, the path can move only to the left or to the bottom
+      this.directions.push('L', 'B')
+    } else if (this.tileCoords[0] > 1 || this.tileCoords[0] < this.$store.state.tilesNumber) {
+      // if the any other column, the path can move freely
+      this.directions.push('L', 'B', 'R')
+    }
+    this.$store.state.tilesIndex += 1
+    this.$store.commit('newTile', {
+      id: this.$store.state.tilesIndex,
+      tileCoords: this.tileCoords,
+      directions: this.directions
+    })
+  }
 }
 </script>
 

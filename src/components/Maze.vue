@@ -5,9 +5,9 @@
       <div class="tile-row"
         v-for="(row, rowIndex) in tilesNumber"
         :key="row" :style="rowStyles">
-        <tile v-for="(tile, tileIndex) in tilesNumber"
+        <tile v-for="(tile, columnIndex) in tilesNumber"
           :key="tile"
-          :tileIndex="setIndex(rowIndex, tileIndex)"
+          :tileCoords="setIndex(columnIndex, rowIndex)"
           :tileStyles="tileStyles"
           :isWinning="setWinning"></tile>
       </div>
@@ -40,8 +40,11 @@ export default {
     }
   },
   methods: {
-    setIndex (rowIndex, tileIndex) {
-      return rowIndex.toString() + tileIndex.toString()
+    setIndex (columnIndex, rowIndex) {
+      return [columnIndex + 1, rowIndex + 1]
+    },
+    setWinning () {
+      return
     }
   },
   data () {

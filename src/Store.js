@@ -6,8 +6,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     level: 1,
-    tiles: 4
+    tilesNumber: 4,
+    tilesIndex: 0,
+    tiles: []
   },
-  mutations: {},
+  mutations: {
+    newTile (state, tile) {
+      state.tiles.push(tile)
+    }
+  },
   actions: {}
 })
