@@ -2,6 +2,10 @@
 
 > A game that is displaying a user a path through a labyrinth and asking her afterwards to replay this path by clicking on the tiles
 
+## Framework used
+I used Vue since its expressiveness and simplicity seemd perfect for the job.
+Also, its state management done with Vuex was perfect to me to manage states variables beetween each games.
+
 ## Build Setup
 
 ``` bash
@@ -26,5 +30,3 @@ npm run e2e
 # run all tests
 npm test
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
