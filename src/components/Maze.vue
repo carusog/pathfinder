@@ -1,55 +1,37 @@
 <template>
   <div class="maze">
-    <h1>Store: {{this.$store.state.level}}</h1>
-    <div class="maze--board">
-      <div class="tile-row"
-        v-for="(row, rowIndex) in tilesNumber"
-        :key="row" :style="rowStyles">
-        <tile v-for="(tile, columnIndex) in tilesNumber"
-          :key="tile"
-          :tileCoords="setIndex(columnIndex, rowIndex)"
-          :tileStyles="tileStyles"
-          :isWinning="setWinning"></tile>
-      </div>
+    <div class="maze__board">
+      <tile v-for="tile in tiles" :key="tile.id"
+        :style="tileStyles"
+        :tileCoords="tile.coords"
+        :isWinning="tile.isWinning">
+        {{tile.id}}
+        <br>
+        {{tile.coords}}
+      </tile>
     </div>
   </div>
 </template>
 
 <script>
-import Store from '../main.js'
 import Tile from './Tile'
 
 export default {
   name: 'maze',
-  props: [
-    'tilesNumber'
-  ],
   components: {
     Tile
   },
+  props: [
+    'rows',
+    'cols',
+    'tiles'
+  ],
   computed: {
-    rowStyles () {
-      return {
-        height: 100 / this.tilesNumber + '%'
-      }
-    },
     tileStyles () {
       return {
-        width: 100 / this.tilesNumber + '%'
+        width: 100 / this.cols + '%',
+        height: 100 / this.rows + '%'
       }
-    }
-  },
-  methods: {
-    setIndex (columnIndex, rowIndex) {
-      return [columnIndex + 1, rowIndex + 1]
-    },
-    setWinning () {
-      return
-    }
-  },
-  data () {
-    return {
-      store: Store
     }
   }
 }
@@ -59,12 +41,19 @@ export default {
 h2 {
   font-weight: normal;
 }
-.maze--board {
-  width: 500px;
-  height: 500px;
+.maze__board {
+  width: 300px;
+  height: 300px;
   background-color: #ccc;
   margin: auto;
   max-width: 90vw;
   max-height: auto;
+  transition: width 1s ease-in-out, height 1s ease-in-out;
+}
+@media (min-width: 640px) {
+  .maze__board {
+    width: 500px;
+    height: 500px;
+  }
 }
 </style>

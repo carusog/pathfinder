@@ -3,7 +3,7 @@
 
     <header>
       <h1 class="page-title">PathFindr</h1>
-      <h2>Level {{level}} ({{tiles}}&times;{{tiles}})</h2>
+      <h2>Level {{gameLevel}} ({{cols}}&times;{{rows}})</h2>
     </header>
 
     <button @click="newGame" class="btn" :class="{'btn-hidden': !isNewGame}">
@@ -11,12 +11,13 @@
       <span v-if="showTimer">{{time}}</span>
     </button>
 
-    <maze :tilesNumber="tiles"></maze>
+    <maze :rows="rows" :cols="cols" :tiles="tiles"></maze>
 
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Maze from './components/Maze'
 
 export default {
@@ -25,12 +26,13 @@ export default {
     Maze
   },
   computed: {
-    level () {
-      return this.$store.state.level
-    },
-    tiles () {
-      return this.$store.state.tilesNumber
-    },
+    ...mapGetters([
+      'gameLevel',
+      'rows',
+      'cols',
+      'seconds',
+      'tiles'
+    ]),
     time () {
       return this.$store.state.seconds
     }
@@ -54,14 +56,12 @@ export default {
         vm.time -= 1
       }, 1000)
     },
-    setPath () {
-
-    },
     setTiles () {
+      console.log('setTiles START')
       let index = 0
-      for (let row = 0, rows = this.$store.state.tilesNumber; row < rows; row++) {
-        console.log(`current index ${index}`)
-        for (let col = 0, cols = this.$store.state.tilesNumber; col < cols; col++) {
+      for (let row = 0, rows = this.rows; row < rows; row++) {
+        console.log(`current INDEX: ${index}`)
+        for (let col = 0, cols = this.cols; col < cols; col++) {
           let canGo = {
             top: false,
             right: true,
@@ -89,8 +89,6 @@ export default {
           index++
         }
       }
-      // this.id = this.$store.state.tilesIndex
-      // this.$store.state.tilesIndex += 1
     },
     newGame () {
       this.showTimer = true

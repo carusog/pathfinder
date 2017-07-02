@@ -6,13 +6,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     level: 1,
-    tilesNumber: 4,
+    rows: 4,
+    cols: 4,
     tilesIndex: 0,
     seconds: 5,
     tiles: []
   },
   getters: {
-    mazeIndex: (state) => { return state.tilesNumber ** 2 }
+    gameLevel: (state) => state.level,
+    rows: (state) => state.rows,
+    cols: (state) => state.cols,
+    mazeIndex: (state, getters) => { return getters.cols * getters.rows },
+    seconds: (state) => state.seconds,
+    tiles: (state) => state.tiles
   },
   mutations: {
     newTile (state, tile) {

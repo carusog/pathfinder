@@ -1,7 +1,7 @@
 <template>
-  <div class="tile" :style="tileStyles">
+  <div class="tile">
     <div class="tile-container" :class="{'winning': isWinning}">
-      {{tileCoords}}
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -10,22 +10,9 @@
 export default {
   props: [
     'tileCoords',
-    'tileStyles'
-  ],
-  data () {
-    return {
-      directions: [],
-      id: null
-    }
-  },
-  // methods: {
-  //   isWinning () {
-  //     return this.$store.state.tiles[this.index].isWinning
-  //   }
-  // }
-  computed: {
-    isWinning: true
-  }
+    'tileStyles',
+    'isWinning'
+  ]
 }
 </script>
 
