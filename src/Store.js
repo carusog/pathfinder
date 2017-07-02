@@ -8,7 +8,11 @@ export default new Vuex.Store({
     level: 1,
     tilesNumber: 4,
     tilesIndex: 0,
+    seconds: 5,
     tiles: []
+  },
+  getters: {
+    mazeIndex: (state) => { return state.tilesNumber ** 2 }
   },
   mutations: {
     newTile (state, tile) {
