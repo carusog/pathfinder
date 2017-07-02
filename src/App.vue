@@ -6,9 +6,9 @@
       <h2>Level {{gameLevel}} ({{cols}}&times;{{rows}})</h2>
     </header>
 
-    <button @click="newGame" class="btn" :class="{'btn-hidden': !isNewGame}">
+    <button @click="newGame" class="btn" :class="{'btn-hidden': isNewGame}">
       Start a new game
-      <span v-if="showTimer">{{time}}</span>
+      <span v-if="countDown">{{time}}</span>
     </button>
 
     <maze :rows="rows" :cols="cols" :tiles="tiles"></maze>
@@ -31,31 +31,18 @@ export default {
       'rows',
       'cols',
       'seconds',
-      'tiles'
-    ]),
-    time () {
-      return this.$store.state.seconds
-    }
+      'tiles',
+      'tilesFirstRow',
+      'isNewGame'
+    ])
   },
   data () {
     return {
-      isNewGame: true,
-      showTimer: false
+      countDown: false,
+      time: 5
     }
   },
   methods: {
-    startTimer () {
-      var vm = this
-      var timer = null
-
-      timer = setInterval(function () {
-        if (vm.time === 0) {
-          vm.isNewGame = false
-          return clearInterval(timer)
-        }
-        vm.time -= 1
-      }, 1000)
-    },
     setTiles () {
       console.log('setTiles START')
       let index = 0
@@ -90,8 +77,27 @@ export default {
         }
       }
     },
+    setPathStart () {
+      this.$store.commit('setWinningTile', Math.floor(Math.random() * this.tilesFirstRow.length))
+    },
+    setWinningPath () {
+      this.setPathStart()
+    },
+    startTimer () {
+      let vm = this
+      let timer = null
+
+      timer = setInterval(function () {
+        if (vm.time === 0) {
+          vm.$store.commit('isNewGame')
+          return clearInterval(timer)
+        }
+        vm.time -= 1
+      }, 1000)
+    },
     newGame () {
-      this.showTimer = true
+      this.setWinningPath()
+      this.countDown = true
       this.startTimer()
     }
   },
