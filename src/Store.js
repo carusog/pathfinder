@@ -21,7 +21,13 @@ export default new Vuex.Store({
     seconds: (state) => state.seconds,
     isNewGame: (state) => state.isNewGame,
     tiles: (state) => state.tiles,
-    tilesFirstRow: (state) => state.tiles.filter(tile => tile.coords[1] === 0)
+    tilesFirstRow: (state) => state.tiles.filter(tile => {
+      console.log('tile is: ')
+      console.log(tile)
+      return tile.coords.y === 0
+    }),
+    previousWinningTile: (state) => state.winningPath[state.winningPath.length - 2] || null,
+    latestWinningTile: (state) => state.winningPath[state.winningPath.length - 1] || null
   },
   mutations: {
     isNewGame (state) {
@@ -31,7 +37,9 @@ export default new Vuex.Store({
       state.tiles.push(tile)
     },
     setWinningTile (state, tile) {
-      state.tiles[tile].isWinning = true
+      let winningTile = state.tiles[tile]
+      winningTile.isWinning = true
+      state.winningPath.push(winningTile)
     }
   },
   actions: {}
