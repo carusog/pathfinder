@@ -79,28 +79,29 @@ export default {
         }
       }
     },
+    setDirection (prev, current) {
+
+    },
     setNext (prev, current) {
+      let moves = Object.keys(current.canGo)
+      let availableMoves = moves.filter((move) => { return current.canGo[move] === true })
+      let nextMove = availableMoves[Math.floor(Math.random() * availableMoves.length)]
+      let leftTile = current.id - 1
+      let rightTile = current.id + 1
+      let bottomTile = current.id + this.rows
       if (!prev) {
-        console.log('current: ', current)
-        let moves = Object.keys(current.canGo)
-        let availableMoves = moves.filter((move) => { return current.canGo[move] === true })
-        let nextMove = availableMoves[Math.floor(Math.random() * availableMoves.length)]
-        // this.setMove(nextMove, current)
-        let leftTile = current.id - 1
-        let rightTile = current.id + 1
-        let bottomTile = current.id + this.rows
         switch (nextMove) {
           case 'right':
-            console.log('selected tile for right: ', this.tiles[rightTile])
-            this.$store.commit('setWinningTile', this.tiles[rightTile])
+            console.log('selected tile for right: ', rightTile)
+            this.$store.commit('setWinningTile', rightTile)
             break
           case 'bottom':
-            console.log('selected tile for bottom: ', this.tiles[bottomTile])
-            this.$store.commit('setWinningTile', this.tiles[bottomTile])
+            console.log('selected tile for bottom: ', bottomTile)
+            this.$store.commit('setWinningTile', bottomTile)
             break
           case 'left':
-            console.log('selected tile for left: ', this.tiles[leftTile])
-            this.$store.commit('setWinningTile', this.tiles[leftTile])
+            console.log('selected tile for left: ', leftTile)
+            this.$store.commit('setWinningTile', leftTile)
             break
           default:
             break
@@ -115,14 +116,9 @@ export default {
       if (this.latestWinningTile === null) {
         this.$store.commit('setWinningTile', Math.floor(Math.random() * this.tilesFirstRow.length))
       }
-      if (this.latestWinningTile.coords.y === this.row) {
-        console.log('Hey, we are on the latest row!!!!')
-        console.log(this.latestWinningTile.id)
-        return
-      } else {
-        this.setNext(this.previousWinningTile, this.latestWinningTile)
-        console.log('chupa')
-      }
+      // while (this.latestWinningTile.coords.y !== 2) {
+      this.setNext(this.previousWinningTile, this.latestWinningTile)
+      // }
     },
     startTimer () {
       let vm = this
