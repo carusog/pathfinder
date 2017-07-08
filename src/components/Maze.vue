@@ -8,6 +8,8 @@
         {{tile.id}}
         <br>
         {{tile.coords}}
+        <br>
+        {{tile.canGo}}
       </tile>
     </div>
   </div>

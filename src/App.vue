@@ -51,27 +51,28 @@ export default {
       for (let row = 0, rows = this.rows; row < rows; row++) {
         console.log(`current INDEX: ${index}`)
         for (let col = 0, cols = this.cols; col < cols; col++) {
-          let canGo = {
-            top: false,
-            right: true,
-            bottom: true,
-            left: true
+          let canGo = []
+          // can go left?
+          if (col === (cols - 1) || col !== 0) {
+            // if the last column, or not on the first column,
+            // the path can move to the left
+            canGo.push(index - 1)
           }
-          // if the first column, the path can move only to the right or to the bottom
-          if (col === 0) {
-            canGo.left = false
+          // can go right?
+          if (col === 0 || col !== (cols - 1)) {
+            // if the first column, or not on the last column,
+            // the path can move to the right
+            canGo.push(index + 1)
           }
-          if (col === (cols - 1)) {
-            // if the last column, the path can move only to the left or to the bottom
-            canGo.right = false
-          }
-          if (row === (rows - 1)) {
-            // if the any other column, the path can move freely
-            canGo.bottom = false
+          // can go bottom?
+          if (row !== (rows - 1)) {
+            // if not on the last row
+            // the path can move to bottom
+            canGo.push(index + this.cols)
           }
           this.$store.commit('newTile', {
             id: index,
-            coords: {x: col, y: row},
+            coords: {x: col + 1, y: row + 1},
             canGo: canGo,
             isWinning: false
           })
@@ -79,46 +80,21 @@ export default {
         }
       }
     },
-    setDirection (prev, current) {
-
-    },
-    setNext (prev, current) {
-      let moves = Object.keys(current.canGo)
-      let availableMoves = moves.filter((move) => { return current.canGo[move] === true })
-      let nextMove = availableMoves[Math.floor(Math.random() * availableMoves.length)]
-      let leftTile = current.id - 1
-      let rightTile = current.id + 1
-      let bottomTile = current.id + this.rows
-      if (!prev) {
-        switch (nextMove) {
-          case 'right':
-            console.log('selected tile for right: ', rightTile)
-            this.$store.commit('setWinningTile', rightTile)
-            break
-          case 'bottom':
-            console.log('selected tile for bottom: ', bottomTile)
-            this.$store.commit('setWinningTile', bottomTile)
-            break
-          case 'left':
-            console.log('selected tile for left: ', leftTile)
-            this.$store.commit('setWinningTile', leftTile)
-            break
-          default:
-            break
-        }
+    setNextWinningTile () {
+      let nextAvailableMoves
+      // if on the last row, we stop
+      if (this.previousWinningTile === null) {
+        // nextAvailableMoves = this.latestWinningTile.canGo
+        // I didn't like the solution above where the first row
+        // would have been cluttered with possible randome winning sibling tiles
+        // so I'm setting up next to the first winning tile on the second row
+        this.$store.commit('setWinningTile', this.latestWinningTile.id + this.cols)
+        return
       } else {
-        console.log('previous: ', prev.id)
-        console.log('current: ', current.id)
+        nextAvailableMoves = this.latestWinningTile.canGo.filter(move => move !== this.previousWinningTile.id)
       }
-    },
-    setWinningPath () {
-      // if there is no winning tile, then, we are choosing the first one
-      if (this.latestWinningTile === null) {
-        this.$store.commit('setWinningTile', Math.floor(Math.random() * this.tilesFirstRow.length))
-      }
-      // while (this.latestWinningTile.coords.y !== 2) {
-      this.setNext(this.previousWinningTile, this.latestWinningTile)
-      // }
+      let randomMove = nextAvailableMoves[Math.floor(Math.random() * nextAvailableMoves.length)]
+      this.$store.commit('setWinningTile', randomMove)
     },
     startTimer () {
       let vm = this
@@ -133,7 +109,13 @@ export default {
       }, 1000)
     },
     newGame () {
-      this.setWinningPath()
+      // if there is no winning tile, then, we are choosing the first one
+      if (this.latestWinningTile === null) {
+        this.$store.commit('setWinningTile', Math.floor(Math.random() * this.cols))
+      }
+      while (this.latestWinningTile.coords.y !== this.rows) {
+        this.setNextWinningTile()
+      }
       // this.countDown = true
       // this.startTimer()
     }
