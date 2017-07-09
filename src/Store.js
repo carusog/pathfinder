@@ -9,9 +9,10 @@ export default new Vuex.Store({
     rows: 4,
     cols: 4,
     seconds: 5,
-    isNewGame: false,
+    isNewGame: true,
     tiles: [],
-    winningPath: []
+    winningPath: [],
+    showPath: false
   },
   getters: {
     gameLevel: (state) => state.level,
@@ -27,11 +28,15 @@ export default new Vuex.Store({
       return tile.coords.y === 0
     }),
     previousWinningTile: (state) => state.winningPath[state.winningPath.length - 2] || null,
-    latestWinningTile: (state) => state.winningPath[state.winningPath.length - 1] || null
+    latestWinningTile: (state) => state.winningPath[state.winningPath.length - 1] || null,
+    showPath: state => state.showPath
   },
   mutations: {
-    isNewGame (state) {
-      state.isNewGame = true
+    isNewGame (state, gameState) {
+      state.isNewGame = gameState
+    },
+    showPath (state, pathVisibility) {
+      state.showPath = pathVisibility
     },
     newTile (state, tile) {
       state.tiles.push(tile)

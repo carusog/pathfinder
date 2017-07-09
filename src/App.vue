@@ -6,12 +6,12 @@
       <h2>Level {{gameLevel}} ({{cols}}&times;{{rows}})</h2>
     </header>
 
-    <button @click="newGame" class="btn" :class="{'btn-hidden': isNewGame}">
+    <button @click="newGame" class="btn" :class="{'btn-hidden': !isNewGame}">
       Start a new game
       <span v-if="countDown">{{time}}</span>
     </button>
 
-    <maze :rows="rows" :cols="cols" :tiles="tiles"></maze>
+    <maze :rows="rows" :cols="cols" :tiles="tiles" :class="{'show-path': showPath}"></maze>
 
   </div>
 </template>
@@ -35,7 +35,8 @@ export default {
       'tiles',
       'tilesFirstRow',
       'previousWinningTile',
-      'latestWinningTile'
+      'latestWinningTile',
+      'showPath'
     ])
   },
   data () {
@@ -102,7 +103,8 @@ export default {
 
       timer = setInterval(function () {
         if (vm.time === 0) {
-          vm.$store.commit('isNewGame')
+          vm.$store.commit('isNewGame', false)
+          vm.$store.commit('showPath', false)
           return clearInterval(timer)
         }
         vm.time -= 1
@@ -117,8 +119,9 @@ export default {
       while (this.latestWinningTile.coords.y !== this.rows) {
         this.setNextWinningTile()
       }
+      this.$store.commit('showPath', true)
       this.countDown = true
-      // this.startTimer()
+      this.startTimer()
     }
   },
   created () {

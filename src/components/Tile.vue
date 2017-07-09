@@ -29,11 +29,12 @@ export default {
   height: 100%;
   border: 1px solid white;
   background-color: #35495e;
+  transition: all 300ms ease-in-out;
 }
 .tile:hover, .tile:active {
-  background-color: #253341;
+  background-color: #3b8070;
 }
-.winning {
+.show-path .winning {
   background-color: #41b883;
 }
 </style>
