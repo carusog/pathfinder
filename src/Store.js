@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    debug: false,
     level: 1,
     rows: 4,
     cols: 4,
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     isNewGame: true,
     tiles: [],
     winningPath: [],
-    showPath: false
+    showPath: false,
+    pathIsReady: false
   },
   getters: {
     gameLevel: (state) => state.level,
@@ -23,13 +25,13 @@ export default new Vuex.Store({
     isNewGame: (state) => state.isNewGame,
     tiles: (state) => state.tiles,
     tilesFirstRow: (state) => state.tiles.filter(tile => {
-      console.log('tile is: ')
-      console.log(tile)
       return tile.coords.y === 0
     }),
+    winningPath: state => state.winningPath,
     previousWinningTile: (state) => state.winningPath[state.winningPath.length - 2] || null,
     latestWinningTile: (state) => state.winningPath[state.winningPath.length - 1] || null,
-    showPath: state => state.showPath
+    showPath: state => state.showPath,
+    pathIsReady: state => state.pathIsReady
   },
   mutations: {
     isNewGame (state, gameState) {
@@ -43,8 +45,17 @@ export default new Vuex.Store({
     },
     setWinningTile (state, tile) {
       let winningTile = state.tiles[tile]
-      winningTile.isWinning = true
+      let insertionDelay = state.winningPath.length * (1000 / state.rows)
+      setTimeout(function () {
+        winningTile.isWinning = true
+        if (winningTile.coords.y === state.rows) {
+          state.pathIsReady = true
+        }
+      }, insertionDelay)
       state.winningPath.push(winningTile)
+    },
+    pathIsReady (state) {
+      state.pathIsReady = true
     }
   },
   actions: {}

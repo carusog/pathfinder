@@ -6,7 +6,7 @@
       <h2>Level {{gameLevel}} ({{cols}}&times;{{rows}})</h2>
     </header>
 
-    <button @click="newGame" class="btn" :class="{'btn-hidden': !isNewGame}">
+    <button @click="newGame" class="btn btn-start-game" :class="{'btn-hidden': !isNewGame, 'countdown': countDown}">
       Start a new game
       <span v-if="countDown">{{time}}</span>
     </button>
@@ -34,9 +34,11 @@ export default {
       'isNewGame',
       'tiles',
       'tilesFirstRow',
+      'winningPath',
       'previousWinningTile',
       'latestWinningTile',
-      'showPath'
+      'showPath',
+      'pathIsReady'
     ])
   },
   data () {
@@ -102,12 +104,14 @@ export default {
       let timer = null
 
       timer = setInterval(function () {
-        if (vm.time === 0) {
-          vm.$store.commit('isNewGame', false)
-          vm.$store.commit('showPath', false)
-          return clearInterval(timer)
+        if (vm.pathIsReady) {
+          if (vm.time === 0) {
+            vm.$store.commit('isNewGame', false)
+            vm.$store.commit('showPath', false)
+            return clearInterval(timer)
+          }
+          vm.time -= 1
         }
-        vm.time -= 1
       }, 1000)
     },
     newGame () {
@@ -132,24 +136,39 @@ export default {
 </script>
 
 <style>
-#app {
+body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #253341;
+  color: #35495e;
   margin-top: 60px;
 }
 
 .btn {
-  height: 30px;
-  line-height: 30px;
+  font-size: 1em;
   border-radius: 3px;
-  background-color: #efefef;
-  transition: all 1s;
+  background-color: #3b8070;
+  color: white;
   opacity: 1;
   border: none;
   margin-bottom: 30px;
+  padding: 15px 20px;
+  outline: none;
+  transition: all 1s ease-in-out;
+}
+
+.btn.countdown {
+  background-color: darkred;
+}
+
+.btn.countdown:hover {
+  background-color: darkred;
+}
+
+.btn:hover {
+  cursor: pointer;
+  background-color: #41b883;
 }
 
 .btn-hidden {

@@ -5,11 +5,13 @@
         :style="tileStyles"
         :tileCoords="tile.coords"
         :isWinning="tile.isWinning">
-        {{tile.id}}
-        <br>
-        {{tile.coords}}
-        <br>
-        {{tile.canGo}}
+        <div v-if="$store.state.debug">
+          {{tile.id}}
+          <br>
+          {{tile.coords}}
+          <br>
+          {{tile.canGo}}
+        </div>
       </tile>
     </div>
   </div>
