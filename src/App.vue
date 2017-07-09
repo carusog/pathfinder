@@ -48,31 +48,31 @@ export default {
     setTiles () {
       console.log('setTiles START')
       let index = 0
-      for (let row = 0, rows = this.rows; row < rows; row++) {
+      for (let row = 1, rows = this.rows; row <= rows; row++) {
         console.log(`current INDEX: ${index}`)
-        for (let col = 0, cols = this.cols; col < cols; col++) {
+        for (let col = 1, cols = this.cols; col <= cols; col++) {
           let canGo = []
           // can go left?
-          if (col === (cols - 1) || col !== 0) {
+          if (col === cols || col !== 1) {
             // if the last column, or not on the first column,
             // the path can move to the left
             canGo.push(index - 1)
           }
           // can go right?
-          if (col === 0 || col !== (cols - 1)) {
+          if (col === 1 || col !== cols) {
             // if the first column, or not on the last column,
             // the path can move to the right
             canGo.push(index + 1)
           }
           // can go bottom?
-          if (row !== (rows - 1)) {
+          if (row !== rows) {
             // if not on the last row
             // the path can move to bottom
             canGo.push(index + this.cols)
           }
           this.$store.commit('newTile', {
             id: index,
-            coords: {x: col + 1, y: row + 1},
+            coords: {x: col, y: row},
             canGo: canGo,
             isWinning: false
           })
@@ -111,12 +111,13 @@ export default {
     newGame () {
       // if there is no winning tile, then, we are choosing the first one
       if (this.latestWinningTile === null) {
-        this.$store.commit('setWinningTile', Math.floor(Math.random() * this.cols))
+        let randomIdFromFirstRow = Math.floor(Math.random() * this.cols)
+        this.$store.commit('setWinningTile', randomIdFromFirstRow)
       }
       while (this.latestWinningTile.coords.y !== this.rows) {
         this.setNextWinningTile()
       }
-      // this.countDown = true
+      this.countDown = true
       // this.startTimer()
     }
   },
